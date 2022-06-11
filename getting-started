@@ -1,0 +1,56 @@
+App Runner hosts Java, Node, Clojure, Python, and dotnet web-apps. After some simple set up, just push changes to the app's git repo and it will automatically be built and deployed here.
+
+Getting started - the hard way
+Step 1: Create an application
+App Runner builds, deploys and runs web applications. When it starts your app, it will pass in the following environment variables:
+
+APP_PORT - a port to host a web server on
+APP_NAME - the path your web service must serve requests on, i.e. http://localhost:{APP_PORT}/{APP_NAME}/*
+APP_DATA - a directory path where you can store data
+TEMP - a path to a temp folder
+There are a number of sample apps to get you started:
+
+maven - Java uber jars built with maven
+Apps of this kind are built and run with:
+mvn clean package
+java -jar target/{artifactid}-{version}.jar
+
+nodejs - NodeJS apps with NPM dependencies
+Apps of this kind are built and run with:
+npm install
+npm test
+node server.js
+
+lein - Clojure uber jars built with leiningen
+Apps of this kind are built and run with:
+lein do test, uberjar, pom
+java -jar target/{artifactid}-{version}-standalone.jar
+
+python2 - Python 2 apps with pip dependencies
+Apps of this kind are built and run with:
+virtualenv --python=python2 server
+server/bin/pip install -r requirements.txt
+server/bin/python server2.py
+
+python3 - Python 3 apps with pip dependencies
+Apps of this kind are built and run with:
+virtualenv --python=python3 server
+server/bin/pip install -r requirements.txt
+server/bin/python server3.py
+
+dotnet - .NET Core apps
+Apps of this kind are built and run with:
+dotnet run
+
+Step 2: Prepare a Git Repo
+Push your app to a Git server such as GitHub or an internal Git Server. App Runner needs to have read access to your repository - HTTP/HTTPS URLs should allow anonymous access. For SSH URLs, the repository needs to have the App Runner server's public key associated with it.
+
+The public key of the App Runner server is:
+
+ssh-rsa /K5psolcdZByNQ== apprunner
+Step 3: Register and deploy your app
+Both these steps can be done with the REST API:
+
+Register
+Deploy
+To automatically deploy changes, set up a post-commit hook in your GIT server POSTing to /api/v1/apps/((your app name))/deploy
